@@ -11,3 +11,6 @@ Write an API microservice using Spring Boot to simulate user registration. Write
 - The API need to have OpenAPI specification, no matter what your approach is code first or design first.
 - Project must use Maven or Gradle to build. Generate a spring boot project here: Spring Initializr 
 - Need to have JUnit Tests
+
+  Resources used to complete this task:
+  https://spring.io/guides/gs/spring-boot/
