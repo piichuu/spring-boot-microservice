@@ -20,3 +20,5 @@ Resources used to complete this task:
 - https://stackoverflow.com/questions/1795402/check-if-a-string-contains-a-special-character
 - https://www.baeldung.com/java-validate-ipv4-address
 - https://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
+- https://www.javainuse.com/spring/boot_swagger3
+- https://www.springboottutorial.com/unit-testing-for-spring-boot-rest-services

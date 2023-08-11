@@ -6,13 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.web.client.RestTemplate;
-import com.fasterxml.jackson.core.JsonParser;
 import org.json.JSONObject;
-import org.json.JSONString;
 
 class User {
     //to improve: encrypt passwords instead of plaintext
     //to improve: store users in db and check if UUID or username has already been assigned, can use JPA repo?
+    //To improve: return welcome message via API response when using curl commands
     private String uuid;
     private String username;
     private String password;
@@ -25,13 +24,14 @@ class User {
         if(username == null || password == null || ip == null)
             throw new IllegalArgumentException("Invalid parameters: Please include Username, Password, and IP address.");
         if(!validPassword(password))
-            throw new IllegalArgumentException("Invalid password: Requires >8 characters, 1 number, 1 capital letter, 1 special character in set ( _ # $ % . )");
+            throw new IllegalArgumentException("Invalid password: Requires minimum 9 characters, 1 number, 1 capital letter, 1 special character in set ( _ # $ % . )");
         if(!validIpAddress(ip))
             throw new IllegalArgumentException("Invalid IP Address: Must be a well-formatted ipv4 in Canada.");
             this.username = username;
         this.password = password;
         this.ip = ip;
         this.uuid = UUID.randomUUID().toString();
+        
         System.out.println("Welcome! " + this.toString());
     }
 

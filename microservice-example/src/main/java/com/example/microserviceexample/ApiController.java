@@ -1,29 +1,43 @@
 package com.example.microserviceexample;
 
 import java.util.List;
-import java.util.Arrays;
+import java.util.ArrayList;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 public class ApiController {
 
-    @GetMapping("/users")
-    String getUsers() {
-        return "Greetings from users endpoint"; //currently just to test endpoint availability
+    //To improve: add DELETE and PUT methods
+    
+    private List<User> users = createList();
+
+    @RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
+    public List<User> firstPage() {
+        return users;
     }
 
     @PostMapping("/registration")
-    User newUser(@RequestBody User newUser) {
-        //TO DO: pass input from api to User object
-        return newUser;
+    public User create(@RequestBody User user) {
+        users.add(user);
+        //System.out.println(users);
+        return user;
+    }
+
+    private static List<User> createList() {
+        List<User> userList = new ArrayList<>();
+
+        User user1 = new User("JaneDoe", "Password123_", "24.48.0.1");
+        User user2 = new User("JohnDoe", "Password789#", "24.48.0.2");
+
+        userList.add(user1);
+        userList.add(user2);
+        return userList;
+
     }
 
 }
