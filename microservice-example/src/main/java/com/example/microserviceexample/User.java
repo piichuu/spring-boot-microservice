@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 class User {
     //TO DO: get user's city based on IP address
     //TO DO: verify user's ip address is in Canada
-    //TO DO: check password policy (1 number, 1 Capitalized letter, 1 special character in this set "_ # $ % .")
     //to improve: encrypt passwords instead of plaintext
     //to improve: store users in db and check if UUID or username has already been assigned, can use JPA repo?
     private String uuid;
@@ -23,7 +22,7 @@ class User {
         if(username == null || password == null || ip == null)
             throw new IllegalArgumentException("Invalid parameters: Please include Username, Password, and IP address.");
         if(!validPassword(password))
-            throw new IllegalArgumentException("Invalid password: Requires 1 number, 1 capital letter, 1 special character in set ( _ # $ % . )");
+            throw new IllegalArgumentException("Invalid password: Requires >8 characters, 1 number, 1 capital letter, 1 special character in set ( _ # $ % . )");
         this.username = username;
         this.password = password;
         this.ip = ip;
@@ -75,7 +74,8 @@ class User {
     }
 
     public boolean validPassword(String password) {
-        //Requires 1 number, 1 capital letter, 1 special character in set ( _ # $ % . )
+        //Requires >8 chars, 1 number, 1 capital letter, 1 special character in set ( _ # $ % . )
+        boolean hasLength = password.length() > 8;
         boolean hasNumber = false;
         boolean hasCapital = false;
         Pattern specials = Pattern.compile("[_#$%.]");
@@ -86,6 +86,6 @@ class User {
             else if(Character.isUpperCase(password.charAt(i)))
                 hasCapital = true;
         }
-        return hasNumber && hasCapital && hasSpecial.find();
+        return hasNumber && hasCapital && hasSpecial.find() && hasLength;
     }
 }

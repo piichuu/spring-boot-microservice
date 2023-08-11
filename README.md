@@ -17,3 +17,4 @@ Resources used to complete this task:
 - https://spring.io/guides/gs/spring-boot/
 - https://spring.io/guides/tutorials/rest/
 - https://github.com/seancfoley/IPAddress 
+- https://stackoverflow.com/questions/1795402/check-if-a-string-contains-a-special-character
