@@ -3,11 +3,13 @@ package com.example.microserviceexample;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
-//import javax.persistence.Entity;
-//import javax.persistence.Id;
 import java.util.regex.Pattern;
 
-//@Entity 
+import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.core.JsonParser;
+import org.json.JSONObject;
+import org.json.JSONString;
+
 class User {
     //TO DO: get user's city based on IP address
     //TO DO: verify user's ip address is in Canada
@@ -17,13 +19,18 @@ class User {
     private String username;
     private String password;
     private String ip;
+    private String city;
 
     User (String username, String password, String ip) throws IllegalArgumentException {
+        this.city = "None"; //will be set while validating ip address
+        //Validate parameters
         if(username == null || password == null || ip == null)
             throw new IllegalArgumentException("Invalid parameters: Please include Username, Password, and IP address.");
         if(!validPassword(password))
             throw new IllegalArgumentException("Invalid password: Requires >8 characters, 1 number, 1 capital letter, 1 special character in set ( _ # $ % . )");
-        this.username = username;
+        if(!validIpAddress(ip))
+            throw new IllegalArgumentException("Invalid IP Address: Must be a well-formatted ipv4 in Canada.");
+            this.username = username;
         this.password = password;
         this.ip = ip;
         this.uuid = UUID.randomUUID().toString();
@@ -69,8 +76,8 @@ class User {
 
     @Override
     public String toString() {
-        //Won't return password as plaintext here. Only UUID, username and IP address.
-        return "User{" + "uuid=" + this.uuid + ", username=" + this.username + ", ip=" + this.ip + "}";
+        //Won't return password as plaintext here. Only UUID, username, IP address, city.
+        return "User{" + "uuid=" + this.uuid + ", username=" + this.username + ", ip=" + this.ip + ", city=" + this.city + "}";
     }
 
     public boolean validPassword(String password) {
@@ -87,5 +94,26 @@ class User {
                 hasCapital = true;
         }
         return hasNumber && hasCapital && hasSpecial.find() && hasLength;
+    }
+
+    public boolean validIpAddress(String ip) {
+        //must be properly formatted IP
+        String regex = "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(ip);
+
+        //must be from Canada according to IP-API.com - Geolocation API - Documentation - JSON
+        String json = new RestTemplate().getForObject("http://ip-api.com/json/" + ip, String.class);
+        JSONObject jsonObject = new JSONObject(json);
+        String country = "None";
+        try {
+            country = jsonObject.getString("country");
+            this.city = jsonObject.getString("city");
+        }
+        catch (Exception e) { //the IP address has no country/city (private IP address)
+            return false;
+        }
+        
+        return matcher.matches() && country.equalsIgnoreCase("Canada");
     }
 }
