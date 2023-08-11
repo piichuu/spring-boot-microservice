@@ -11,8 +11,6 @@ import org.json.JSONObject;
 import org.json.JSONString;
 
 class User {
-    //TO DO: get user's city based on IP address
-    //TO DO: verify user's ip address is in Canada
     //to improve: encrypt passwords instead of plaintext
     //to improve: store users in db and check if UUID or username has already been assigned, can use JPA repo?
     private String uuid;
@@ -34,7 +32,7 @@ class User {
         this.password = password;
         this.ip = ip;
         this.uuid = UUID.randomUUID().toString();
-        System.out.println("Testing API input: " + this.toString());
+        System.out.println("Welcome! " + this.toString());
     }
 
     public String getUsername() {
@@ -77,7 +75,7 @@ class User {
     @Override
     public String toString() {
         //Won't return password as plaintext here. Only UUID, username, IP address, city.
-        return "User{" + "uuid=" + this.uuid + ", username=" + this.username + ", ip=" + this.ip + ", city=" + this.city + "}";
+        return "Username: " + this.username + ", City: " + this.city + ", UUID: " + this.uuid;
     }
 
     public boolean validPassword(String password) {
@@ -113,7 +111,7 @@ class User {
         catch (Exception e) { //the IP address has no country/city (private IP address)
             return false;
         }
-        
+
         return matcher.matches() && country.equalsIgnoreCase("Canada");
     }
 }
